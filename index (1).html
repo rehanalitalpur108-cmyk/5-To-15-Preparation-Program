@@ -1,0 +1,1162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>5th to 15th Preparation - By Rehan Ali</title>
+<style>
+body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:linear-gradient(135deg,#667eea,#764ba2);transition:background .3s}
+/* TOP BAR */
+.topbar{height:55px;display:flex;align-items:center;padding:0 15px;color:#fff;background:rgba(0,0,0,.25);backdrop-filter:blur(10px);position:relative;z-index:1100}
+.title{flex:1;text-align:center;font-weight:700}
+.hamburger-btn {
+  width: 35px;
+  height: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: pointer;
+  position: relative;
+  z-index: 1100;
+}
+
+.hamburger-btn span {
+  display: block;
+  height: 4px;
+  width: 100%;
+  background: #fff;
+  border-radius: 2px;
+  transition: transform 0.4s ease, opacity 0.4s ease;
+  transform-origin: center;
+}
+
+/* Perfect X animation */
+.hamburger-btn.open span:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 5px);
+}
+.hamburger-btn.open span:nth-child(2) {
+  opacity: 0;
+}
+.hamburger-btn.open span:nth-child(3) {
+  transform: rotate(-45deg) translate(9px, -9px);
+}
+/* SIDEBAR */
+.sidebar{position:fixed;top:0;left:0;width:260px;height:100%;background:rgba(0,0,0,.85);color:#fff;transition:transform 0.4s ease;transform:translateX(-100%);z-index:1000;padding-top:20px}
+.sidebar.open{transform:translateX(0)}
+.sidebar .close{font-size:28px;text-align:right;padding:0 20px;cursor:pointer}
+.sidebar a{display:block;padding:15px 20px;color:#fff;text-decoration:none;font-size:16px;border-bottom:1px solid rgba(255,255,255,.1)}
+.sidebar a:hover{background:rgba(255,255,255,.1)}
+body.sidebar-active::after{content:"";position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:900}
+/* CONTAINER */
+.quiz-container {
+    width: 85%;                   /* responsive width */
+    max-width: 520px;             /* maximum width */
+    min-height: 70vh;             /* ensure it fills most of the screen */
+    background: #fff;
+    margin: 20px auto 0 auto;     /* top margin only, no bottom margin */
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.25);
+    display: flex;                /* flexible layout */
+    flex-direction: column;       /* stack content vertically */
+    justify-content: flex-start;  /* content starts from top */
+    overflow-y: auto;             /* scroll if content exceeds container */
+}
+.home-header{text-align:center;margin-bottom:20px}
+.subject-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.subject-card{padding:18px;border-radius:18px;text-align:center;color:#fff;font-weight:600;cursor:pointer;box-shadow:0 10px 25px rgba(0,0,0,.2);transition:all .3s}
+.subject-card:hover{transform:scale(1.05)}
+.math{background:linear-gradient(135deg,#43cea2,#185a9d)}
+.english{background:linear-gradient(135deg,#ff9966,#ff5e62)}
+.world{background:linear-gradient(135deg,#56ccf2,#2f80ed)}
+.islamic{background:linear-gradient(135deg,#11998e,#38ef7d)}
+.pakistan{background:linear-gradient(135deg,#1d976c,#93f9b9)}
+.science{background:linear-gradient(135deg,#8360c3,#2ebf91)}
+.current{background:linear-gradient(135deg,#f7971e,#ffd200)}
+.gk{background:linear-gradient(135deg,#ee0979,#ff6a00)}
+/* COUNTDOWN */
+.countdown{position:fixed;inset:0;background:rgba(0,0,0,.85);display:flex;align-items:center;justify-content:center;font-size:120px;font-weight:900;color:#fff;z-index:2000;animation:zoom .6s ease}
+@keyframes zoom{from{transform:scale(.3);opacity:0}to{transform:scale(1);opacity:1}}
+/* QUIZ */
+h2{text-align:center}
+.question-counter{text-align:center;font-weight:600;margin-bottom:8px}
+.timer-bar {
+  width: 100%;
+  height: 12px;
+  border-radius: 12px;
+  background: #ddd;
+  overflow: hidden;
+  box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+  margin-bottom: 12px;
+}
+
+.timer-fill {
+  height: 100%;
+  width: 100%;
+  background-color: #2196f3; /* Start blue */
+  border-radius: 12px;
+  transform-origin: left;
+  transform: scaleX(1);
+  box-shadow: 0 0 8px rgba(0,0,0,0.2), inset 0 0 5px rgba(255,255,255,0.3);
+}
+/* ANSWER FEEDBACK POP */
+.answer-feedback{text-align:center;font-size:18px;font-weight:bold;margin-bottom:10px;opacity:0;transform:scale(0.5);transition:all 0.4s ease}
+@keyframes pop {0%{transform:scale(0.5);opacity:0}50%{transform:scale(1.3);opacity:1}100%{transform:scale(1);opacity:1}}
+.answer-feedback.show{animation: pop 0.4s ease forwards}
+.correct-text{color:#2ecc71}
+.wrong-text{color:#e74c3c}
+/* MCQ LABEL POP */
+@keyframes labelPop {0%{transform:scale(1)}50%{transform:scale(1.08)}100%{transform:scale(1)}}
+.options label{display:block;padding:14px;margin:10px 0;background:#f3f6fb;border-radius:14px;cursor:pointer;transition:all 0.3s}
+.correct{background:#43e97b!important}
+.wrong{background:#ff758c!important}
+/* RESULT */
+.result-box{text-align:center}
+.progress-ring{width:150px;height:150px;border-radius:50%;background:conic-gradient(#4caf50 var(--percent),#e0e0e0 0);display:flex;align-items:center;justify-content:center;margin:20px auto}
+.progress-ring span{font-size:28px;font-weight:bold}
+.stats{display:flex;justify-content:space-between}
+.stat-card{flex:1;margin:0 5px;padding:15px;border-radius:14px;background:rgba(255,255,255,.9)}
+.restart-btn{margin-top:25px;padding:14px;width:100%;border:none;border-radius:14px;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;font-size:16px}
+/* MAIN MENU BUTTONS */
+.main-menu{display:flex;flex-direction:column;gap:14px}
+.menu-btn{padding:18px;background:#2196f3;color:#fff;text-align:center;font-weight:700;border-radius:14px;cursor:pointer;transition:all .3s;text-transform:uppercase}
+.menu-btn:hover{transform:scale(1.05)}
+.back-btn{grid-column:span 2;padding:14px;text-align:center;background:#555;color:#fff;border-radius:12px;cursor:pointer;margin-bottom:10px;transition:all .3s}
+.back-btn:hover{background:#333}
+H
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar" id="sidebar">
+  <div class="close" onclick="toggleSidebar()">✕</div>
+  
+  <!-- All Subjects -->
+  <a href="#" onclick="showSubjects()">All Subjects Mcqs Test</a>
+  
+  <!-- Feedback -->
+  <a href="#" onclick="window.open('https://wa.me/+923242191070','_blank')">Contact for Feedback</a>
+  
+  <!-- Donate / Coffee -->
+  <a href="#" onclick="showTextOverlay(
+    'Donate Me Coffee',
+    'Assalam-o-Alaikum,<br><br>I’m a student working hard to continue my education. If you’d like to support me in a small way, you can buy me a coffee ☕ — even a little help means a lot and keeps me motivated.<br><br>For details, please contact me on WhatsApp: <b>0324-2191070</b><br><br>JazakAllah for your kindness and support.'
+  ); return false;">
+    Donate Me Coffee
+  </a>
+</div>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="hamburger-btn" onclick="toggleSidebar(this)">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+  <div class="title">5th To 15th Grade Preparation</div>
+</div>
+
+<!-- MAIN MENU -->
+<div class="quiz-container" id="menu">
+  <div class="home-header">
+    <h2>Main Menu</h2>
+  </div>
+  <div class="main-menu" id="mainMenu">
+    <div class="menu-btn" onclick="showSubjects()">All Subjects Mcqs Test</div>
+    <div class="menu-btn" onclick="window.open('https://chat.whatsapp.com/LsvrDArLkac9Cce0MKKM9E?mode=wwt','_blank')">Join Our Whatsapp Group</div>
+    
+    <!-- About / Info -->
+    <div class="menu-btn" onclick="showTextOverlay(
+      'About This Platform',
+      'Welcome to the 5th to 15th Grade Preparation Platform — a dedicated, all-in-one hub designed to help students excel in competitive exams and school-level assessments.<br><br>Our mission is to provide clear, concise, and engaging multiple-choice quizzes across key subjects such as Math, English, Science, Islamic Studies, Pakistan Affairs, Current Affairs, General Knowledge, and more. Each quiz is carefully crafted to reinforce learning, test knowledge, and build confidence.<br><br>Stay updated with the latest content, improvements, and new quiz topics as we continuously expand our library to meet the evolving needs of students.<br><br>Whether you are aiming to improve your grades, strengthen your concepts, or challenge yourself with tough questions, this platform is built to guide you every step of the way — efficiently, interactively, and with full clarity.<br><br>Happy learning and keep progressing! 🌟'
+    )">
+      About This Platform
+    </div>
+  </div>
+</div>
+<div id="textOverlay" style="
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.6);
+  backdrop-filter:blur(8px);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:99999;
+">
+  <div id="textBox" style="
+    background:#fff;
+    width:88%;
+    max-width:520px;
+    max-height:80vh;
+    overflow-y:auto;
+    padding:22px;
+    border-radius:22px;
+    transform:translateY(60px);
+    opacity:0;
+    transition:all .4s ease;
+  ">
+    <h2 id="textOverlayTitle"></h2>
+    <div id="textOverlayContent" style="line-height:1.7;margin:14px 0"></div>
+    <div class="menu-btn" onclick="hideTextOverlay()">← Back</div>
+  </div>
+</div>
+
+  <!-- SUBJECT CARDS BAR (hidden initially) -->
+  <div class="subject-grid" id="subjectBar" style="
+    display:none;
+    position:fixed;
+    top:15%;
+    left:5%;
+    transform:translate(-50%, -100px); /* start above */
+    opacity:0;
+    transition: all 0.5s ease;
+    width: 90%;
+    max-width: 500px;
+    gap: 12px;
+    padding: 20px;
+    box-sizing: border-box;
+">
+  <div class="back-btn" onclick="backToMain()">← Back</div>
+  <div class="subject-card math" onclick="startCountdown('math')">Math</div>
+  <div class="subject-card english" onclick="startCountdown('english')">English</div>
+  <div class="subject-card world" onclick="startCountdown('world')">World Information</div>
+  <div class="subject-card islamic" onclick="startCountdown('islamic')">Islamic Studies</div>
+  <div class="subject-card pakistan" onclick="startCountdown('pakistan')">Pakistan Affairs</div>
+  <div class="subject-card science" onclick="startCountdown('science')">Everyday Science</div>
+  <div class="subject-card current" onclick="startCountdown('current')">Current Affairs</div>
+  <div class="subject-card gk" onclick="startCountdown('gk')">General Knowledge</div>
+</div>
+
+<!-- QUIZ SCREEN -->
+<div class="quiz-container" id="quiz" style="display:none">
+  <h2 id="title"></h2>
+  <div class="question-counter" id="counter"></div>
+  <div class="timer-bar"><div class="timer-fill" id="timerFill"></div></div>
+  <div class="answer-feedback" id="feedback"></div>
+  <div id="question"></div>
+  <div class="options" id="options"></div>
+</div>
+<footer style="
+    width: 90%;
+    max-width: 1200px;
+    margin: 7px auto; /* lifts the footer and centers it */
+    padding: 10px 0;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: #fff;
+    text-align: center;
+    font-size: 14px;
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    letter-spacing: 0.5px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+">A dedicated platform for students preparing for intermediate-level competitive exams (Grades 5–15).</footer>
+<script>
+function showTextOverlay(title, html) {
+  const overlay = document.getElementById("textOverlay");
+  const box = document.getElementById("textBox");
+  
+  document.getElementById("textOverlayTitle").innerText = title;
+  document.getElementById("textOverlayContent").innerHTML = html;
+  
+  overlay.style.display = "flex";
+  
+  requestAnimationFrame(() => {
+    box.style.transform = "translateY(0)";
+    box.style.opacity = "1";
+  });
+}
+
+function hideTextOverlay() {
+  const overlay = document.getElementById("textOverlay");
+  const box = document.getElementById("textBox");
+  
+  box.style.transform = "translateY(60px)";
+  box.style.opacity = "0";
+  
+  setTimeout(() => {
+    overlay.style.display = "none";
+  }, 400);
+}
+function toggleSidebar(btn) {
+    const sidebar = document.getElementById('sidebar');
+    sidebar.classList.toggle('open');
+    document.body.classList.toggle('sidebar-active');
+    if (btn) btn.classList.toggle('open'); // this triggers the X animation
+}
+// SHOW SUBJECTS
+function showSubjects() {
+  const mainMenu = document.getElementById("mainMenu");
+  const subjectBar = document.getElementById("subjectBar");
+  
+  // Fade out main menu
+  mainMenu.style.transition = "all 0.5s ease";
+  mainMenu.style.opacity = "0";
+  mainMenu.style.transform = "translateY(-50px)";
+  
+  setTimeout(() => {
+    mainMenu.style.display = "none";
+    
+    // Show subject bar
+    subjectBar.style.display = "grid";
+    subjectBar.style.opacity = "0";
+    subjectBar.style.transform = "translateY(-100px)"; // start above
+    subjectBar.style.transition = "all 0.5s ease";
+    
+    // Check if header exists
+    let header = document.getElementById("subjectHeader");
+    if (!header) {
+      header = document.createElement("div");
+      header.id = "subjectHeader";
+      header.innerText = "Choose your subject to begin!\nEach question has a 30-second timer.\nComplete the test and see your results immediately.";
+      header.style.gridColumn = "1 / -1";
+      header.style.textAlign = "center";
+      header.style.fontSize = "20px";
+      header.style.fontWeight = "600";
+      header.style.marginBottom = "15px";
+      header.style.opacity = "0";
+      header.style.transform = "translateY(-20px)";
+      header.style.transition = "opacity 0.5s ease, transform 0.5s ease";
+      subjectBar.prepend(header);
+    }
+    
+    header.style.display = "block";
+    
+    // Animate slide down and fade-in
+    setTimeout(() => {
+      subjectBar.style.transform = "translateY(0)";
+      subjectBar.style.opacity = "1";
+      
+      header.style.transform = "translateY(0)";
+      header.style.opacity = "1";
+    }, 50);
+    
+  }, 500);
+}
+
+// BACK TO MAIN MENU
+function backToMain() {
+  const mainMenu = document.getElementById("mainMenu");
+  const subjectBar = document.getElementById("subjectBar");
+  
+  // Animate hiding subjectBar
+  subjectBar.style.transition = "all 0.5s ease";
+  subjectBar.style.opacity = "0";
+  subjectBar.style.transform = "translateY(50px)";
+  
+  setTimeout(() => {
+    subjectBar.style.display = "none";
+    
+    // Hide header to prevent duplication next time
+    const header = document.getElementById("subjectHeader");
+    if (header) header.style.display = "none";
+    
+    // Show main menu
+    mainMenu.style.display = "flex";
+    setTimeout(() => {
+      mainMenu.style.opacity = "1";
+      mainMenu.style.transform = "translateY(0)";
+    }, 50);
+  }, 500);
+}
+
+// QUESTION BANKS
+const banks={
+math:[
+  { q: "If 5x − 3 = 22, what is x?", options: ["4", "5", "6", "7"], answer: 2 },
+  
+  { q: "What is the value of 3² + 4²?", options: ["12", "20", "25", "30"], answer: 2 },
+  
+  { q: "The LCM of 6 and 15 is:", options: ["15", "30", "45", "60"], answer: 1 },
+  
+  { q: "If the perimeter of a square is 32 cm, its side length is:", options: ["6", "7", "8", "9"], answer: 2 },
+  
+  { q: "What is the value of √(144 + 25)?", options: ["11", "12", "13", "14"], answer: 2 },
+  
+  { q: "If a:b = 4:7 and b:c = 14:9, find a:c.", options: ["8:9", "4:9", "7:9", "14:9"], answer: 0 },
+  
+  { q: "The area of a rectangle is 96 cm² and its length is 12 cm. The width is:", options: ["6", "7", "8", "9"], answer: 2 },
+  
+  { q: "What is the value of 7³ − 6²?", options: ["307", "313", "319", "325"], answer: 1 },
+  
+  { q: "If x + y = 12 and x − y = 4, find x.", options: ["6", "7", "8", "9"], answer: 2 },
+  
+  { q: "The sum of first 10 natural numbers is:", options: ["45", "50", "55", "60"], answer: 2 },
+  
+  { q: "What is the next term in the sequence: 2, 6, 18, ?", options: ["24", "36", "48", "54"], answer: 1 },
+  
+  { q: "If the radius of a circle is 14 cm, its diameter is:", options: ["14", "21", "28", "42"], answer: 2 },
+  
+  { q: "What is the value of 15% of 240?", options: ["30", "32", "34", "36"], answer: 3 },
+  
+  { q: "The angles of a triangle are in the ratio 1:2:3. The largest angle is:", options: ["60°", "90°", "100°", "120°"], answer: 1 },
+  
+  { q: "What is the value of 2⁴ + 3³?", options: ["35", "41", "43", "45"], answer: 1 },
+  
+  { q: "If the cost price is 500 and selling price is 575, the profit percent is:", options: ["10%", "12%", "15%", "18%"], answer: 2 },
+  
+  { q: "How many solutions does the equation x² = 16 have?", options: ["1", "2", "3", "4"], answer: 1 },
+  
+  { q: "What is the value of sin 30° + cos 60°?", options: ["0", "1/2", "1", "3/2"], answer: 2 },
+  
+  { q: "The HCF of 24 and 36 is:", options: ["6", "8", "10", "12"], answer: 3 },
+  
+  { q: "If the length of a square is increased by 50%, the area becomes:", options: ["1.5 times", "2 times", "2.25 times", "3 times"], answer: 2 },
+  
+  { q: "The average of 6, 8, 10, and 12 is:", options: ["8", "9", "10", "11"], answer: 2 },
+  
+  { q: "What is the value of |−7| + |3 − 8|?", options: ["10", "11", "12", "13"], answer: 2 },
+  
+  { q: "If 3 pencils cost 18 rupees, how much do 5 pencils cost?", options: ["25", "28", "30", "32"], answer: 2 },
+  
+  { q: "What is the value of (x + 2)(x − 2) when x = 5?", options: ["21", "23", "25", "27"], answer: 0 },
+  
+  { q: "The sum of interior angles of a quadrilateral is:", options: ["180°", "270°", "360°", "450°"], answer: 2 },
+  
+  { q: "What is the cube root of 125?", options: ["3", "4", "5", "6"], answer: 2 },
+  
+  { q: "If the speed of a car is 60 km/h, how far will it travel in 2.5 hours?", options: ["120 km", "130 km", "140 km", "150 km"], answer: 3 },
+  
+  { q: "What is the value of tan 45°?", options: ["0", "1/2", "1", "√3"], answer: 2 },
+  
+  { q: "If x² − 9 = 0, what are the values of x?", options: ["3", "−3", "±3", "0"], answer: 2 },
+  
+  { q: "What is the value of 4! (4 factorial)?", options: ["12", "16", "24", "36"], answer: 2 },
+  
+  { q: "The probability of getting an even number when a die is rolled is:", options: ["1/6", "1/3", "1/2", "2/3"], answer: 2 },
+  
+  { q: "If a number is increased by 10%, the new number becomes 110. The original number was:", options: ["90", "95", "100", "105"], answer: 2 },
+  
+  { q: "What is the value of √(49 × 16)?", options: ["14", "21", "28", "32"], answer: 2 },
+  
+  { q: "The ratio of areas of two squares is 4:9. The ratio of their sides is:", options: ["2:3", "4:9", "3:2", "9:4"], answer: 0 },
+  
+  { q: "If x + 1/x = 4, what is x² + 1/x²?", options: ["14", "15", "16", "18"], answer: 0 },
+  
+  { q: "What is the value of cos 60° − sin 30°?", options: ["0", "1/2", "1", "−1/2"], answer: 0 },
+  
+  { q: "How many edges does a cube have?", options: ["8", "10", "12", "14"], answer: 2 },
+  
+  { q: "If the sum of angles of a polygon is 900°, how many sides does it have?", options: ["6", "7", "8", "9"], answer: 1 },
+  
+  { q: "What is the value of 7 × (8 − 3) + 6?", options: ["35", "38", "41", "46"], answer: 2 },
+  
+  { q: "If the circumference of a circle is 44 cm, what is its radius? (π = 22/7)", options: ["7 cm", "10 cm", "14 cm", "21 cm"], answer: 0 },
+  
+  { q: "What is the next term in the sequence: 5, 10, 20, 40, ?", options: ["60", "70", "80", "100"], answer: 2 },
+  
+  { q: "If 2x + 3 = 11, what is x?", options: ["3", "4", "5", "6"], answer: 1 },
+  
+  { q: "The mean of first 5 natural numbers is:", options: ["2", "3", "4", "5"], answer: 1 },
+  
+  { q: "What is the value of (√3)² + (√5)²?", options: ["5", "6", "7", "8"], answer: 3 },
+  
+  { q: "If a triangle has sides 7 cm, 10 cm, and 5 cm, it is:", options: ["Right-angled", "Obtuse-angled", "Acute-angled", "Isosceles"], answer: 2 },
+  
+  { q: "What is the value of 9² − 4²?", options: ["55", "65", "77", "81"], answer: 1 },
+  
+  { q: "If the price of an item is reduced from 800 to 720, the discount percent is:", options: ["5%", "8%", "10%", "12%"], answer: 2 },
+  { q: "A bag contains 5 red and 3 blue balls. If one ball is drawn at random, what is the probability it is blue?", 
+  options: ["1/2", "1/3", "3/8", "5/8"], answer: 2 },
+
+  { q: "The sum of first 12 multiples of 3 is:", 
+  options: ["198", "216", "222", "234"], answer: 3 },
+
+  { q: "If a rectangular garden is 20 m long and 15 m wide, what is its diagonal length?", 
+  options: ["20 m", "25 m", "30 m", "35 m"], answer: 1 }],
+english:[
+  /* 1-5: Reading Comprehension */
+  { q: "Plastic pollution has become a major environmental issue. Every year, millions of tons of plastic waste end up in oceans, harming marine life and ecosystems. Many countries are now implementing policies to reduce plastic use and encourage recycling. Q: What is the main idea of the passage?", options: ["Plastic helps the environment", "Plastic pollution is harmful", "Marine life is increasing", "Recycling is unnecessary"], answer: 1 },
+  
+  { q: "Solar energy is a renewable energy source that comes from the sun. It is sustainable, reduces greenhouse gas emissions, and can be used to generate electricity or heat water. Many households and industries are now installing solar panels. Q: Solar energy is described as:", options: ["Non-renewable", "Renewable", "Polluting", "Limited"], answer: 1 },
+  
+  { q: "Reading books improves knowledge, imagination, and concentration. It also helps in improving vocabulary and understanding different cultures. In the digital age, reading is essential for both education and personal development. Q: What is a benefit of reading according to the passage?", options: ["Reduces vocabulary", "Improves concentration", "Decreases imagination", "Promotes ignorance"], answer: 1 },
+  
+  { q: "Rainforests are rich in biodiversity and home to thousands of plant and animal species. Deforestation and human activities are threatening these forests. Protecting rainforests is crucial for maintaining ecological balance and combating climate change. Q: Rainforests are important because:", options: ["They have few species", "They are barren lands", "They are rich in biodiversity", "They have no plants"], answer: 2 },
+  
+  { q: "Electric vehicles are becoming popular due to rising fuel prices and environmental concerns. They run on batteries, produce less pollution, and help reduce dependence on fossil fuels. Governments worldwide are offering incentives to promote electric vehicles. Q: Why are electric vehicles becoming popular?", options: ["Rising fuel prices and environmental concerns", "They use more fuel", "They pollute more", "They are slower"], answer: 0 },
+  
+  /* 6-15: Synonyms */
+  { q: "Synonym of 'Brave' is:", options: ["Cowardly", "Bold", "Timid", "Fearful"], answer: 1 },
+  { q: "Synonym of 'Rapid' is:", options: ["Slow", "Quick", "Delayed", "Late"], answer: 1 },
+  { q: "Synonym of 'Intelligent' is:", options: ["Dull", "Smart", "Foolish", "Stupid"], answer: 1 },
+  { q: "Synonym of 'Beautiful' is:", options: ["Ugly", "Pretty", "Plain", "Dull"], answer: 1 },
+  { q: "Synonym of 'Lazy' is:", options: ["Hardworking", "Idle", "Diligent", "Active"], answer: 1 },
+  { q: "Synonym of 'Happy' is:", options: ["Sad", "Joyful", "Angry", "Upset"], answer: 1 },
+  { q: "Synonym of 'Foolish' is:", options: ["Wise", "Silly", "Smart", "Intelligent"], answer: 1 },
+  { q: "Synonym of 'Courageous' is:", options: ["Brave", "Fearful", "Cowardly", "Timid"], answer: 0 },
+  { q: "Synonym of 'Diligent' is:", options: ["Lazy", "Hardworking", "Careless", "Negligent"], answer: 1 },
+  { q: "Synonym of 'Tiny' is:", options: ["Huge", "Large", "Small", "Massive"], answer: 2 },
+  
+  /* 16-25: Antonyms */
+  { q: "Antonym of 'Generous' is:", options: ["Charitable", "Selfish", "Kind", "Liberal"], answer: 1 },
+  { q: "Antonym of 'Optimistic' is:", options: ["Hopeful", "Cheerful", "Pessimistic", "Positive"], answer: 2 },
+  { q: "Antonym of 'Complex' is:", options: ["Complicated", "Simple", "Difficult", "Intricate"], answer: 1 },
+  { q: "Antonym of 'Ancient' is:", options: ["Old", "Modern", "Historic", "Primeval"], answer: 1 },
+  { q: "Antonym of 'Difficult' is:", options: ["Hard", "Simple", "Challenging", "Complicated"], answer: 1 },
+  { q: "Antonym of 'Happy' is:", options: ["Joyful", "Sad", "Cheerful", "Glad"], answer: 1 },
+  { q: "Antonym of 'Lazy' is:", options: ["Hardworking", "Idle", "Indolent", "Inactive"], answer: 0 },
+  { q: "Antonym of 'Victory' is:", options: ["Defeat", "Success", "Triumph", "Achievement"], answer: 0 },
+  { q: "Antonym of 'Scarce' is:", options: ["Abundant", "Rare", "Limited", "Few"], answer: 0 },
+  { q: "Antonym of 'Expand' is:", options: ["Increase", "Enlarge", "Contract", "Spread"], answer: 2 },
+  
+  /* 26-30: Spellings */
+  { q: "Identify the correct spelling:", options: ["Accomodate", "Acommodate", "Accommodate", "Acommadate"], answer: 2 },
+  { q: "Identify the correct spelling:", options: ["Definately", "Definitly", "Definitely", "Definatly"], answer: 2 },
+  { q: "Identify the correct spelling:", options: ["Seperate", "Separate", "Seperete", "Seperat"], answer: 1 },
+  { q: "Identify the correct spelling:", options: ["Occassion", "Occasion", "Ocassion", "Occasoin"], answer: 1 },
+  { q: "Identify the correct spelling:", options: ["Recieve", "Receive", "Recive", "Receve"], answer: 1 },
+  
+  /* 31-35: Error Detection / Spot the Error */
+  { q: "Find the error: 'She go to school every day.'", options: ["She", "go", "to", "every"], answer: 1 },
+  { q: "Find the error: 'He don’t like ice cream.'", options: ["He", "don’t", "like", "ice cream"], answer: 1 },
+  { q: "Find the error: 'They has completed the work.'", options: ["They", "has", "completed", "work"], answer: 1 },
+  { q: "Find the error: 'I am agree with you.'", options: ["I", "am", "agree", "with"], answer: 2 },
+  { q: "Find the error: 'She can sings very well.'", options: ["can", "sings", "very", "well"], answer: 1 },
+  
+  /* 36-40: Prepositions */
+  { q: "He is good ___ mathematics.", options: ["in", "at", "on", "by"], answer: 1 },
+  { q: "She arrived ___ the airport on time.", options: ["to", "at", "in", "on"], answer: 1 },
+  { q: "The cat is hiding ___ the table.", options: ["in", "under", "over", "between"], answer: 1 },
+  { q: "He is interested ___ learning French.", options: ["on", "in", "at", "for"], answer: 1 },
+  { q: "They will meet us ___ noon.", options: ["at", "in", "on", "by"], answer: 0 },
+  
+  /* 41-50: Sentence Structure / Grammar */
+  { q: "Choose the correct sentence:", options: ["He don’t like apples.", "He doesn’t likes apples.", "He doesn’t like apples.", "He not like apples."], answer: 2 },
+  { q: "Choose the correct sentence:", options: ["She are happy.", "She is happy.", "She am happy.", "She be happy."], answer: 1 },
+  { q: "Choose the correct sentence:", options: ["I has finished my homework.", "I have finished my homework.", "I having finished my homework.", "I had finishes my homework."], answer: 1 },
+  { q: "Choose the correct sentence:", options: ["They goes to market.", "They go to market.", "They going to market.", "They gone to market."], answer: 1 },
+  { q: "Choose the correct sentence:", options: ["He can sings well.", "He can sing well.", "He can singing well.", "He can sang well."], answer: 1 },
+  { q: "Choose the correct sentence:", options: ["If I were you, I will go.", "If I were you, I would go.", "If I was you, I will go.", "If I was you, I would go."], answer: 1 },
+  { q: "Choose the correct sentence:", options: ["She suggested to leave early.", "She suggested leaving early.", "She suggested leave early.", "She suggested left early."], answer: 1 },
+  { q: "Choose the correct sentence:", options: ["I look forward for meeting you.", "I look forward to meeting you.", "I look forward meeting you.", "I look forward on meeting you."], answer: 1 },
+  { q: "Choose the correct sentence:", options: ["He is more taller than me.", "He is taller than me.", "He is tall than me.", "He is tallest than me."], answer: 1 },
+  { q: "Choose the correct sentence:", options: ["She has visited Paris last year.", "She visited Paris last year.", "She visit Paris last year.", "She have visited Paris last year."], answer: 1 }],
+world:[
+  /* 1-10: Countries & Capitals */
+  { q: "What is the capital of Australia?", options: ["Sydney", "Melbourne", "Canberra", "Brisbane"], answer: 2 },
+  { q: "What is the capital of Canada?", options: ["Toronto", "Ottawa", "Montreal", "Vancouver"], answer: 1 },
+  { q: "What is the capital of Egypt?", options: ["Cairo", "Alexandria", "Giza", "Luxor"], answer: 0 },
+  { q: "What is the capital of Brazil?", options: ["Rio de Janeiro", "São Paulo", "Brasília", "Salvador"], answer: 2 },
+  { q: "What is the capital of Japan?", options: ["Osaka", "Kyoto", "Tokyo", "Hiroshima"], answer: 2 },
+  { q: "What is the capital of South Africa?", options: ["Pretoria", "Cape Town", "Johannesburg", "Durban"], answer: 0 },
+  { q: "What is the capital of Russia?", options: ["Moscow", "Saint Petersburg", "Novosibirsk", "Kazan"], answer: 0 },
+  { q: "What is the capital of Turkey?", options: ["Istanbul", "Ankara", "Izmir", "Bursa"], answer: 1 },
+  { q: "What is the capital of Argentina?", options: ["Buenos Aires", "Córdoba", "Rosario", "Mendoza"], answer: 0 },
+  { q: "What is the capital of Saudi Arabia?", options: ["Mecca", "Riyadh", "Jeddah", "Dammam"], answer: 1 },
+  
+  /* 11-15: Flags & Currencies */
+  { q: "Which country has a red circle on a white background flag?", options: ["Japan", "Bangladesh", "Turkey", "South Korea"], answer: 0 },
+  { q: "What is the currency of the United Kingdom?", options: ["Euro", "Pound Sterling", "Dollar", "Franc"], answer: 1 },
+  { q: "Which country’s flag has a maple leaf?", options: ["Canada", "United States", "Switzerland", "Norway"], answer: 0 },
+  { q: "What is the currency of India?", options: ["Rupee", "Dollar", "Peso", "Yen"], answer: 0 },
+  { q: "Which country has a horizontal black, red, and yellow flag?", options: ["Germany", "Belgium", "Austria", "Spain"], answer: 0 },
+  
+  /* 16-25: Rivers, Mountains & Oceans */
+  { q: "Which is the longest river in the world?", options: ["Amazon", "Nile", "Yangtze", "Mississippi"], answer: 1 },
+  { q: "Which is the highest mountain in the world?", options: ["K2", "Mount Everest", "Kangchenjunga", "Lhotse"], answer: 1 },
+  { q: "Which ocean is the largest by area?", options: ["Atlantic", "Indian", "Pacific", "Arctic"], answer: 2 },
+  { q: "The Danube River flows through which continent?", options: ["Asia", "Europe", "Africa", "South America"], answer: 1 },
+  { q: "Mount Kilimanjaro is located in which country?", options: ["Kenya", "Tanzania", "Uganda", "Ethiopia"], answer: 1 },
+  { q: "Which river flows through Baghdad?", options: ["Tigris", "Euphrates", "Nile", "Jordan"], answer: 0 },
+  { q: "Which mountain range separates Europe and Asia?", options: ["Alps", "Urals", "Himalayas", "Andes"], answer: 1 },
+  { q: "Which ocean is the smallest in the world?", options: ["Arctic", "Atlantic", "Indian", "Southern"], answer: 0 },
+  { q: "The Amazon rainforest is primarily in which country?", options: ["Brazil", "Peru", "Colombia", "Venezuela"], answer: 0 },
+  { q: "Which river is the longest in South America?", options: ["Amazon", "Orinoco", "Paraná", "São Francisco"], answer: 0 },
+  
+  /* 26-35: World Organizations & Politics */
+  { q: "The headquarters of the United Nations is in which city?", options: ["Geneva", "New York", "Vienna", "Brussels"], answer: 1 },
+  { q: "NATO stands for:", options: ["North Atlantic Treaty Organization", "National Alliance of Territories", "New Asian Trade Organization", "North African Treaty Organization"], answer: 0 },
+  { q: "The IMF stands for:", options: ["International Monetary Fund", "International Market Forum", "Independent Monetary Federation", "Internal Money Fund"], answer: 0 },
+  { q: "Which country is a permanent member of the UN Security Council?", options: ["Germany", "India", "France", "Japan"], answer: 2 },
+  { q: "Where is the headquarters of the World Bank?", options: ["Washington D.C.", "Paris", "London", "New York"], answer: 0 },
+  { q: "Which organization manages international air travel standards?", options: ["ICAO", "WHO", "IMF", "UNESCO"], answer: 0 },
+  { q: "The G20 summit involves how many major economies?", options: ["19", "20", "21", "22"], answer: 1 },
+  { q: "The European Union headquarters is in:", options: ["Berlin", "Brussels", "Paris", "Rome"], answer: 1 },
+  { q: "The Red Cross is associated with:", options: ["Environmental protection", "Humanitarian aid", "Trade agreements", "Space research"], answer: 1 },
+  { q: "Which organization regulates international trade?", options: ["WTO", "UNICEF", "WHO", "IMF"], answer: 0 },
+  
+  /* 36-50: Population / Area / Misc World Facts */
+  { q: "Which is the most populous country in the world?", options: ["India", "China", "USA", "Indonesia"], answer: 1 },
+  { q: "Which is the largest country by area?", options: ["Canada", "China", "Russia", "USA"], answer: 2 },
+  { q: "Which country has the largest Muslim population?", options: ["Saudi Arabia", "Pakistan", "Indonesia", "Egypt"], answer: 2 },
+  { q: "Which country has the highest population density?", options: ["India", "Monaco", "Bangladesh", "Singapore"], answer: 1 },
+  { q: "Which country is the smallest by land area?", options: ["Monaco", "Vatican City", "San Marino", "Liechtenstein"], answer: 1 },
+  { q: "Which desert is the largest in the world?", options: ["Sahara", "Gobi", "Kalahari", "Arabian"], answer: 0 },
+  { q: "Which country has the longest coastline?", options: ["Australia", "Canada", "Indonesia", "Russia"], answer: 1 },
+  { q: "Which city is known as the 'City of Canals'?", options: ["Venice", "Amsterdam", "Bangkok", "Bruges"], answer: 0 },
+  { q: "Which country is known as the 'Land of the Rising Sun'?", options: ["China", "South Korea", "Japan", "Thailand"], answer: 2 },
+  { q: "Which African country was never colonized?", options: ["Ethiopia", "Nigeria", "Kenya", "Ghana"], answer: 0 },
+  { q: "Which country has the largest freshwater lake by surface area?", options: ["USA", "Canada", "Russia", "Africa (Lake Victoria)"], answer: 1 },
+  { q: "Which country has the highest number of time zones?", options: ["USA", "Russia", "France", "China"], answer: 2 },
+  { q: "Which city is the capital of New Zealand?", options: ["Auckland", "Wellington", "Christchurch", "Dunedin"], answer: 1 },
+  { q: "Which country is home to the Great Barrier Reef?", options: ["Australia", "Philippines", "Indonesia", "Fiji"], answer: 0 },
+  { q: "Which country shares the longest land border with the USA?", options: ["Mexico", "Canada", "Russia", "Cuba"], answer: 1 }],
+islamic:[
+  /* 1-10: Quran & Hadith */
+  { q: "Which Surah is known as 'The Heart of the Quran'?", options: ["Al-Fatiha", "Yaseen", "Al-Baqarah", "Al-Kahf"], answer: 1 },
+  { q: "The Quran was revealed to Prophet Muhammad (PBUH) over how many years?", options: ["10 years", "13 years", "23 years", "30 years"], answer: 2 },
+  { q: "Which is the first verse revealed in the Quran?", options: ["Iqra (Read)", "Bismillah", "Alhamdulillah", "Inna anzalnahu"], answer: 0 },
+  { q: "How many chapters (Surahs) are there in the Quran?", options: ["114", "120", "99", "108"], answer: 0 },
+  { q: "Hadith means:", options: ["Story", "Narration of Prophet's sayings", "Book", "Prayer"], answer: 1 },
+  { q: "Which Hadith collection is considered most authentic after Sahih Bukhari?", options: ["Sahih Muslim", "Jami Tirmidhi", "Sunan Abu Dawood", "Musnad Ahmad"], answer: 0 },
+  { q: "The Quran is written in which language?", options: ["Arabic", "Persian", "Urdu", "Hebrew"], answer: 0 },
+  { q: "Which Surah is the longest in the Quran?", options: ["Al-Baqarah", "Al-Imran", "An-Nisa", "Al-Maidah"], answer: 0 },
+  { q: "The Quran was revealed in which city?", options: ["Mecca", "Medina", "Jerusalem", "Ta’if"], answer: 0 },
+  { q: "The Quran emphasizes the belief in:", options: ["Prophets only", "Oneness of Allah", "Angels only", "Judgment Day only"], answer: 1 },
+  
+  /* 11-20: Prophets */
+  { q: "Who was the first prophet according to Islam?", options: ["Prophet Adam", "Prophet Nuh", "Prophet Musa", "Prophet Ibrahim"], answer: 0 },
+  { q: "Prophet Isa (Jesus) was born to:", options: ["Maryam", "Hawwa", "Aisha", "Khadijah"], answer: 0 },
+  { q: "Prophet Muhammad (PBUH) was born in which year approximately?", options: ["570 CE", "580 CE", "600 CE", "610 CE"], answer: 0 },
+  { q: "Who built the Kaaba according to Islamic belief?", options: ["Prophet Musa", "Prophet Ibrahim and Ismail", "Prophet Dawud", "Prophet Nuh"], answer: 1 },
+  { q: "Prophet Yunus is also known as:", options: ["Jonah", "Joseph", "Noah", "David"], answer: 0 },
+  { q: "Prophet Musa received the commandments on which mountain?", options: ["Mount Sinai", "Mount Arafat", "Mount Uhud", "Mount Hira"], answer: 0 },
+  { q: "Who was swallowed by a whale according to the Quran?", options: ["Prophet Yunus", "Prophet Musa", "Prophet Isa", "Prophet Ibrahim"], answer: 0 },
+  { q: "Prophet Nuh’s Ark came to rest on which mountain?", options: ["Mount Judi", "Mount Sinai", "Mount Everest", "Mount Arafat"], answer: 0 },
+  { q: "Prophet Muhammad (PBUH) received the first revelation in:", options: ["Cave Hira", "Cave Thawr", "Kaaba", "Mount Arafat"], answer: 0 },
+  { q: "Which prophet was known for his patience?", options: ["Prophet Ayyub", "Prophet Yusuf", "Prophet Musa", "Prophet Dawud"], answer: 0 },
+  
+  /* 21-30: Islamic History */
+  { q: "The migration of Prophet Muhammad (PBUH) from Mecca to Medina is called:", options: ["Hijra", "Isra", "Mi’raj", "Fath"], answer: 0 },
+  { q: "The first Caliph after Prophet Muhammad (PBUH) was:", options: ["Umar ibn Khattab", "Abu Bakr Siddiq", "Ali ibn Abi Talib", "Uthman ibn Affan"], answer: 1 },
+  { q: "Battle of Badr took place in which year?", options: ["624 CE", "625 CE", "627 CE", "622 CE"], answer: 0 },
+  { q: "Which Caliph is known as 'Al-Farooq'?", options: ["Umar ibn Khattab", "Abu Bakr", "Ali ibn Abi Talib", "Uthman ibn Affan"], answer: 0 },
+  { q: "The Treaty of Hudaybiyyah was signed between Muslims and:", options: ["Quraish", "Romans", "Persians", "Byzantines"], answer: 0 },
+  { q: "Which city became the center of the Islamic Caliphate after Medina?", options: ["Mecca", "Damascus", "Baghdad", "Cairo"], answer: 1 },
+  { q: "Battle of Uhud was fought against:", options: ["Quraish", "Romans", "Persians", "Byzantines"], answer: 0 },
+  { q: "The conquest of Mecca took place in which year?", options: ["630 CE", "628 CE", "632 CE", "624 CE"], answer: 0 },
+  { q: "The compilation of the Quran in a single book form was done during which Caliph?", options: ["Abu Bakr", "Umar ibn Khattab", "Uthman ibn Affan", "Ali ibn Abi Talib"], answer: 2 },
+  { q: "Which Caliph is known for expansion of the Islamic empire to Egypt and Persia?", options: ["Umar ibn Khattab", "Abu Bakr", "Uthman ibn Affan", "Ali ibn Abi Talib"], answer: 0 },
+  
+  /* 31-40: Islamic Practices */
+  { q: "How many pillars of Islam are there?", options: ["4", "5", "6", "7"], answer: 1 },
+  { q: "Fasting during the month of Ramadan is obligatory for:", options: ["All humans", "Adult Muslims", "Children", "Elderly only"], answer: 1 },
+  { q: "Zakat is:", options: ["Voluntary charity", "Obligatory charity", "Prayer", "Pilgrimage"], answer: 1 },
+  { q: "Salah is performed how many times a day?", options: ["3", "4", "5", "6"], answer: 2 },
+  { q: "The direction of prayer (Qibla) is towards:", options: ["Medina", "Mecca", "Jerusalem", "Kufa"], answer: 1 },
+  { q: "Hajj is performed in which city?", options: ["Medina", "Mecca", "Jerusalem", "Baghdad"], answer: 1 },
+  { q: "Which Surah is recited in every unit of Salah?", options: ["Al-Fatiha", "Al-Ikhlas", "Al-Kafirun", "Al-Nas"], answer: 0 },
+  { q: "Which prayer is performed before sunrise?", options: ["Fajr", "Dhuhr", "Asr", "Maghrib"], answer: 0 },
+  { q: "Which prayer is the shortest?", options: ["Fajr", "Dhuhr", "Asr", "Maghrib"], answer: 0 },
+  { q: "Which prayer is offered after sunset?", options: ["Maghrib", "Isha", "Fajr", "Dhuhr"], answer: 0 },
+  
+  /* 41-50: Islamic Law & Ethics */
+  { q: "Halal means:", options: ["Forbidden", "Permissible", "Doubtful", "Optional"], answer: 1 },
+  { q: "Haram means:", options: ["Permissible", "Forbidden", "Recommended", "Neutral"], answer: 1 },
+  { q: "Sadaqah means:", options: ["Voluntary charity", "Obligatory charity", "Prayer", "Fasting"], answer: 0 },
+  { q: "Which is prohibited in Islam?", options: ["Riba (Interest)", "Honesty", "Charity", "Patience"], answer: 0 },
+  { q: "The term 'Sharia' refers to:", options: ["Islamic Law", "Prayer", "Fasting", "Pilgrimage"], answer: 0 },
+  { q: "Which month is known for fasting?", options: ["Muharram", "Ramadan", "Shawwal", "Safar"], answer: 1 },
+  { q: "Which act is considered virtuous in Islam?", options: ["Stealing", "Lying", "Charity", "Backbiting"], answer: 2 },
+  { q: "Which of the following is one of the six articles of faith?", options: ["Zakat", "Angels", "Hajj", "Salah"], answer: 1 },
+  { q: "Belief in the Day of Judgment is part of:", options: ["Pillars of Islam", "Articles of Faith", "Sharia", "Fasting"], answer: 1 },
+  { q: "Islam encourages:", options: ["Forgiveness and kindness", "Greed", "Dishonesty", "Cruelty"], answer: 0 }],
+pakistan:[
+  /* 1-10: History of Pakistan */
+  { q: "Pakistan became independent in which year?", options: ["1946", "1947", "1948", "1949"], answer: 1 },
+  { q: "Who was the founder of Pakistan?", options: ["Allama Iqbal", "Liaquat Ali Khan", "Muhammad Ali Jinnah", "Khawaja Nazimuddin"], answer: 2 },
+  { q: "Pakistan was created under which plan?", options: ["Two-Nation Theory", "Indian National Plan", "Muslim League Resolution", "Independence Charter"], answer: 0 },
+  { q: "The first Governor-General of Pakistan was:", options: ["Liaquat Ali Khan", "Muhammad Ali Jinnah", "Iskander Mirza", "Khawaja Nazimuddin"], answer: 1 },
+  { q: "Pakistan became a republic in which year?", options: ["1956", "1947", "1962", "1973"], answer: 0 },
+  { q: "The first constitution of Pakistan was passed in:", options: ["1956", "1962", "1973", "1947"], answer: 0 },
+  { q: "Which city was the first capital of Pakistan?", options: ["Islamabad", "Karachi", "Lahore", "Rawalpindi"], answer: 1 },
+  { q: "Who was the first Prime Minister of Pakistan?", options: ["Liaquat Ali Khan", "Muhammad Ali Jinnah", "Khawaja Nazimuddin", "Zulfiqar Ali Bhutto"], answer: 0 },
+  { q: "The Lahore Resolution was passed in which year?", options: ["1940", "1935", "1945", "1947"], answer: 0 },
+  { q: "Which event is known as the 'Pakistan Movement'?", options: ["Partition of India", "Independence struggle for Muslims", "War of 1965", "Bhutto era reforms"], answer: 1 },
+  
+  /* 11-20: Geography & Provinces */
+  { q: "The largest province of Pakistan by area is:", options: ["Punjab", "Sindh", "Balochistan", "Khyber Pakhtunkhwa"], answer: 2 },
+  { q: "The Indus River originates from which country?", options: ["India", "China", "Afghanistan", "Pakistan"], answer: 1 },
+  { q: "Which province is known as the 'Land of the Pure'? (Hint: Islamic name)", options: ["Punjab", "Sindh", "Balochistan", "None"], answer: 3 },
+  { q: "Islamabad is located in which province/territory?", options: ["Punjab", "Sindh", "Khyber Pakhtunkhwa", "Federal Capital Territory"], answer: 3 },
+  { q: "The highest peak in Pakistan is:", options: ["Nanga Parbat", "K2", "Broad Peak", "Rakaposhi"], answer: 1 },
+  { q: "Which desert is located in Sindh?", options: ["Thar Desert", "Cholistan Desert", "Kharan Desert", "Thal Desert"], answer: 0 },
+  { q: "Which province borders Afghanistan?", options: ["Punjab", "Sindh", "Balochistan", "Khyber Pakhtunkhwa"], answer: 3 },
+  { q: "The coastal city of Pakistan is:", options: ["Karachi", "Lahore", "Peshawar", "Quetta"], answer: 0 },
+  { q: "The Indus delta is in which province?", options: ["Punjab", "Sindh", "Balochistan", "Khyber Pakhtunkhwa"], answer: 1 },
+  { q: "The largest salt mine in Pakistan is located in:", options: ["Khewra", "Mianwali", "Quetta", "Gilgit"], answer: 0 },
+  
+  /* 21-30: Government & Politics */
+  { q: "Pakistan has which type of government?", options: ["Monarchy", "Republic", "Federation", "Confederation"], answer: 2 },
+  { q: "The current (2025) Prime Minister of Pakistan is:", options: ["Imran Khan", "Shahid Khaqan Abbasi", "Nawaz Sharif", "Shahbaz Sharif"], answer: 3 },
+  { q: "The President of Pakistan is elected by:", options: ["Direct public vote", "National Assembly", "Electoral College", "Supreme Court"], answer: 2 },
+  { q: "Pakistan National Assembly has how many seats?", options: ["342", "350", "300", "400"], answer: 0 },
+  { q: "The Senate of Pakistan represents:", options: ["Provinces equally", "Population only", "Military", "Judiciary"], answer: 0 },
+  { q: "Who is the head of judiciary in Pakistan?", options: ["President", "Prime Minister", "Chief Justice", "Speaker"], answer: 2 },
+  { q: "Pakistan’s legal system is based on:", options: ["Islamic Law only", "British Law only", "Combination of Islamic and British Law", "UN Law"], answer: 2 },
+  { q: "Which political party ruled Pakistan after 1971?", options: ["Pakistan Muslim League", "PPP", "MQM", "PTI"], answer: 1 },
+  { q: "Which institution supervises elections in Pakistan?", options: ["Election Commission of Pakistan", "Supreme Court", "National Assembly", "Senate"], answer: 0 },
+  { q: "The term for provincial assemblies is:", options: ["National Assembly", "Provincial Assembly", "Senate", "Union Council"], answer: 1 },
+  
+  /* 31-40: Economy & Resources */
+  { q: "Pakistan’s main export product is:", options: ["Textiles", "Electronics", "Automobiles", "Oil"], answer: 0 },
+  { q: "The main river providing irrigation in Pakistan is:", options: ["Jhelum", "Chenab", "Indus", "Ravi"], answer: 2 },
+  { q: "Which port is the largest in Pakistan?", options: ["Karachi Port", "Gwadar Port", "Port Qasim", "Bin Qasim"], answer: 0 },
+  { q: "Pakistan’s main source of electricity is:", options: ["Hydropower", "Solar", "Nuclear", "Wind"], answer: 0 },
+  { q: "Which region is rich in natural gas in Pakistan?", options: ["Punjab", "Sindh", "Balochistan", "Khyber Pakhtunkhwa"], answer: 2 },
+  { q: "Pakistan’s main agricultural crop is:", options: ["Wheat", "Rice", "Sugarcane", "Cotton"], answer: 0 },
+  { q: "Which city is known as the 'Financial Capital' of Pakistan?", options: ["Lahore", "Karachi", "Islamabad", "Peshawar"], answer: 1 },
+  { q: "The CPEC (China-Pakistan Economic Corridor) connects Pakistan with which country?", options: ["India", "China", "Iran", "Afghanistan"], answer: 1 },
+  { q: "The State Bank of Pakistan is located in:", options: ["Lahore", "Islamabad", "Karachi", "Quetta"], answer: 2 },
+  { q: "Pakistan’s currency is:", options: ["Rupee", "Dollar", "Pound", "Euro"], answer: 0 },
+  
+  /* 41-50: Important Personalities & Institutions */
+  { q: "Allama Iqbal is known as:", options: ["Father of the Nation", "Poet of the East", "First Prime Minister", "First Governor-General"], answer: 1 },
+  { q: "The 'Father of the Nation' of Pakistan is:", options: ["Liaquat Ali Khan", "Muhammad Ali Jinnah", "Allama Iqbal", "Iskander Mirza"], answer: 1 },
+  { q: "The Supreme Court of Pakistan is located in:", options: ["Lahore", "Karachi", "Islamabad", "Quetta"], answer: 2 },
+  { q: "The Pakistan Army was established in which year?", options: ["1945", "1946", "1947", "1948"], answer: 2 },
+  { q: "Which Pakistani female Nobel laureate is famous in education and social work?", options: ["Malala Yousafzai", "Benazir Bhutto", "Abida Parveen", "Fatima Jinnah"], answer: 0 },
+  { q: "The largest university in Pakistan is:", options: ["Punjab University", "Karachi University", "NUST", "Allama Iqbal Open University"], answer: 3 },
+  { q: "Which Pakistani city is called the 'City of Saints'?", options: ["Multan", "Lahore", "Karachi", "Peshawar"], answer: 0 },
+  { q: "The official language of Pakistan is:", options: ["Punjabi", "Sindhi", "Urdu", "Pashto"], answer: 2 },
+  { q: "The Pakistan Rangers are responsible for:", options: ["Education", "Border security", "Healthcare", "Transportation"], answer: 1 },
+  { q: "The Indus River is also known as:", options: ["Lifeline of Pakistan", "Mother River", "Both A and B", "None"], answer: 2 }],
+science:[
+  /* 1-10: Human Body & Health */
+  { q: "Which vitamin is mainly obtained from sunlight?", options: ["Vitamin A", "Vitamin B12", "Vitamin C", "Vitamin D"], answer: 3 },
+  { q: "The human heart has how many chambers?", options: ["2", "3", "4", "5"], answer: 2 },
+  { q: "Which blood cells help fight infections?", options: ["Red blood cells", "White blood cells", "Platelets", "Plasma"], answer: 1 },
+  { q: "What is the function of the lungs?", options: ["Digest food", "Pump blood", "Exchange gases", "Produce hormones"], answer: 2 },
+  { q: "Which part of the body controls balance?", options: ["Brain", "Heart", "Cerebellum", "Lungs"], answer: 2 },
+  { q: "Which nutrient is essential for muscle growth?", options: ["Carbohydrates", "Proteins", "Fats", "Vitamins"], answer: 1 },
+  { q: "Which organ removes waste from blood?", options: ["Kidney", "Liver", "Lungs", "Stomach"], answer: 0 },
+  { q: "Which vitamin helps in blood clotting?", options: ["Vitamin A", "Vitamin K", "Vitamin C", "Vitamin D"], answer: 1 },
+  { q: "Which disease is caused by deficiency of Vitamin C?", options: ["Rickets", "Scurvy", "Beriberi", "Anemia"], answer: 1 },
+  { q: "The largest organ in the human body is:", options: ["Heart", "Liver", "Skin", "Brain"], answer: 2 },
+  
+  /* 11-20: Environment & Nature */
+  { q: "Which gas do plants absorb during photosynthesis?", options: ["Oxygen", "Carbon dioxide", "Nitrogen", "Hydrogen"], answer: 1 },
+  { q: "Which layer protects Earth from harmful UV rays?", options: ["Ozone layer", "Troposphere", "Stratosphere", "Mesosphere"], answer: 0 },
+  { q: "Which natural resource is used to produce electricity in hydroelectric plants?", options: ["Wind", "Water", "Coal", "Sunlight"], answer: 1 },
+  { q: "Which gas is released during decomposition of organic matter?", options: ["Methane", "Oxygen", "Hydrogen", "Carbon monoxide"], answer: 0 },
+  { q: "The main cause of global warming is:", options: ["Deforestation", "Greenhouse gases", "Recycling", "Air pressure"], answer: 1 },
+  { q: "Which soil type is best for farming?", options: ["Clay", "Sandy", "Loamy", "Rocky"], answer: 2 },
+  { q: "Which process returns water from plants to the atmosphere?", options: ["Transpiration", "Evaporation", "Condensation", "Precipitation"], answer: 0 },
+  { q: "Which layer of Earth do we live on?", options: ["Crust", "Mantle", "Core", "Lithosphere"], answer: 0 },
+  { q: "Which renewable energy comes from the sun?", options: ["Solar energy", "Wind energy", "Geothermal energy", "Hydro energy"], answer: 0 },
+  { q: "Acid rain is mainly caused by:", options: ["CO2 and H2O", "SO2 and NOx gases", "O2 and N2", "Methane"], answer: 1 },
+  
+  /* 21-30: Food & Nutrition */
+  { q: "Which nutrient provides the most energy per gram?", options: ["Carbohydrates", "Proteins", "Fats", "Vitamins"], answer: 2 },
+  { q: "Which vitamin is found in citrus fruits?", options: ["Vitamin A", "Vitamin B12", "Vitamin C", "Vitamin D"], answer: 2 },
+  { q: "Which mineral is important for strong bones?", options: ["Iron", "Calcium", "Magnesium", "Potassium"], answer: 1 },
+  { q: "Which food is rich in protein?", options: ["Rice", "Milk", "Sugar", "Oil"], answer: 1 },
+  { q: "Deficiency of iron causes:", options: ["Scurvy", "Anemia", "Rickets", "Beriberi"], answer: 1 },
+  { q: "Which type of carbohydrate is considered slow-releasing energy?", options: ["Simple sugar", "Complex carbohydrate", "Fats", "Proteins"], answer: 1 },
+  { q: "Which vitamin is fat-soluble?", options: ["Vitamin B", "Vitamin C", "Vitamin D", "Vitamin B12"], answer: 2 },
+  { q: "Which nutrient helps in digestion and prevents constipation?", options: ["Protein", "Fiber", "Fat", "Carbohydrates"], answer: 1 },
+  { q: "Which food group provides essential amino acids?", options: ["Fruits", "Vegetables", "Meat & Dairy", "Sugars"], answer: 2 },
+  { q: "Which type of fat is considered healthy?", options: ["Saturated fat", "Trans fat", "Unsaturated fat", "Hydrogenated fat"], answer: 2 },
+  
+  /* 31-40: Daily Physics & Chemistry */
+  { q: "What makes objects float in water?", options: ["Gravity", "Density", "Pressure", "Friction"], answer: 1 },
+  { q: "Boiling point of water at sea level is:", options: ["90°C", "100°C", "110°C", "120°C"], answer: 1 },
+  { q: "Which gas is used in balloons to float?", options: ["Oxygen", "Hydrogen", "Helium", "Nitrogen"], answer: 2 },
+  { q: "What is the unit of force?", options: ["Joule", "Newton", "Pascal", "Watt"], answer: 1 },
+  { q: "Which household item can act as an acid?", options: ["Baking soda", "Lemon juice", "Soap", "Water"], answer: 1 },
+  { q: "Which household item is a base?", options: ["Vinegar", "Lemon juice", "Baking soda", "Honey"], answer: 2 },
+  { q: "Which force pulls objects toward Earth?", options: ["Friction", "Gravity", "Magnetism", "Inertia"], answer: 1 },
+  { q: "Water turns into ice at:", options: ["0°C", "32°C", "100°C", "50°C"], answer: 0 },
+  { q: "Which metal is a good conductor of electricity?", options: ["Iron", "Copper", "Wood", "Plastic"], answer: 1 },
+  { q: "Light travels fastest in:", options: ["Air", "Water", "Glass", "Vacuum"], answer: 3 },
+  
+  /* 41-50: Technology & Inventions */
+  { q: "The internet was first developed in which decade?", options: ["1960s", "1970s", "1980s", "1990s"], answer: 0 },
+  { q: "Who invented the telephone?", options: ["Thomas Edison", "Alexander Graham Bell", "Nikola Tesla", "James Watt"], answer: 1 },
+  { q: "Electric bulbs were invented by:", options: ["Nikola Tesla", "Thomas Edison", "Benjamin Franklin", "Alexander Bell"], answer: 1 },
+  { q: "Which device measures temperature?", options: ["Barometer", "Thermometer", "Hygrometer", "Anemometer"], answer: 1 },
+  { q: "Which device measures pressure?", options: ["Thermometer", "Barometer", "Voltmeter", "Ammeter"], answer: 1 },
+  { q: "Which energy source powers most modern vehicles?", options: ["Solar", "Electricity", "Fossil fuels", "Wind"], answer: 2 },
+  { q: "Which invention is used to purify water at home?", options: ["Filter", "Boiler", "Fan", "Heater"], answer: 0 },
+  { q: "A microwave oven uses which type of waves?", options: ["Sound waves", "Light waves", "Microwaves", "Radio waves"], answer: 2 },
+  { q: "Which device converts chemical energy into electrical energy?", options: ["Battery", "Solar panel", "Generator", "Motor"], answer: 0 },
+  { q: "Which technology is used in QR codes?", options: ["Infrared", "Laser", "Digital encoding", "Magnetism"], answer: 2 }],
+current:[
+  /* 1‑10: Global Summits & International Events */
+  { q: "Where was the 2025 G20 Summit held?", options: ["Tokyo, Japan", "New York, USA", "Johannesburg, South Africa", "Paris, France"], answer: 2 },
+  { q: "The 2025 G20 Summit theme was focused on:", options: ["Peace & Security", "Solidarity, Equality, Sustainability", "Tech & Innovation", "Trade Only"], answer: 1 },
+  { q: "The NATO Summit in 2025 took place in which city?", options: ["Brussels", "New York", "The Hague", "Ankara"], answer: 2 },
+  { q: "Which non‑Atlantic partner was represented at the 2025 NATO Summit?", options: ["Australia", "Japan", "Canada", "South Korea"], answer: 1 },
+  { q: "Which major Asia‑Pacific economic forum met in South Korea in 2025?", options: ["ASEAN", "APEC", "SAARC", "EU Summit"], answer: 1 },
+  { q: "The 17th BRICS Summit in 2025 was held in:", options: ["Beijing", "Rio de Janeiro", "Moscow", "New Delhi"], answer: 1 },
+  { q: "At the 2025 BRICS Summit, which country is set to chair the next meeting?", options: ["Brazil", "China", "India", "Russia"], answer: 2 },
+  { q: "2025’s Munich Security Conference focused primarily on:", options: ["Economic Growth", "Multipolarity and security challenges", "Sporting Partnerships", "Climate only"], answer: 1 },
+  { q: "APEC 2025 was hosted by:", options: ["Japan", "South Korea", "Australia", "Vietnam"], answer: 1 },
+  { q: "G20 South African presidency highlighted:", options: ["Digital trade only", "Africa’s development and Global South priorities", "Only defence spending", "Sports events"], answer: 1 },
+  
+  /* 11‑20: Politics, Conflicts & Diplomacy */
+  { q: "In late 2025, which Southeast Asian conflict intensified, prompting ASEAN intervention?", options: ["Myanmar–Thailand border", "Thailand–Cambodia border", "Indonesia–Malaysia dispute", "Philippines–Vietnam dispute"], answer: 1 },
+  { q: "Sweden and Germany in 2025 cut foreign aid to redirect funds toward:", options: ["Healthcare", "Defence and Ukraine support", "Education", "Infrastructure"], answer: 1 },
+  { q: "Political violence erupted in Bangladesh in December 2025 after the death of:", options: ["A political leader Osman Hadi", "A military general", "A foreign diplomat", "The Prime Minister"], answer: 0 },
+  { q: "Which country’s leader became Japan’s first woman prime minister in 2025?", options: ["South Korea", "Japan", "China", "India"], answer: 1 },
+  { q: "Tensions in East Asia in 2025 increased over issues involving:", options: ["South China Sea only", "Taiwan relations", "North Korea only", "Trade tariffs"], answer: 1 },
+  { q: "Which peace‑related activity briefly altered the Israel‑Hamas situation in 2025?", options: ["A ceasefire deal", "Border expansion", "Economic sanctions", "Space cooperation"], answer: 0 },
+  { q: "In 2025 Nepal, protests by Gen‑Z were sparked largely by:", options: ["Economic crisis", "Social media ban and corruption", "Floods", "Trade embargo"], answer: 1 },
+  { q: "Which international exercise took place off the Guam coast in 2025 involving multiple navies?", options: ["Sea Dragon 2025", "Pacific Shield", "Indian Ocean Drill", "Arctic Watch"], answer: 0 },
+  { q: "Donald Trump’s return to the White House in 2025 affected global politics along with:", options: ["Trade wars and alliances", "Sports policies", "Only economic sanctions", "Only climate action"], answer: 0 },
+  { q: "The US involvement in global defence discussions at the Munich Security Conference was criticized for:", options: ["Weakening transatlantic cooperation", "Supporting climate deals", "Economic sanctions", "Trade reforms"], answer: 0 },
+  
+  /* 21‑30: National & Regional Current Affairs (2025) */
+  { q: "Which cultural festival was added to the UNESCO Intangible Heritage List in 2025?", options: ["Holi", "Deepavali", "Thanksgiving", "Carnival"], answer: 1 },
+  { q: "Which tech giant announced a $17.5 billion investment plan in India focused on AI?", options: ["Google", "Microsoft", "Apple", "Amazon"], answer: 1 },
+  { q: "India was re‑elected to the IMO Council with:", options: ["Highest votes in its category", "Lowest votes", "No votes", "Average votes"], answer: 0 },
+  { q: "Which milestone did India achieve in Squash in 2025?", options: ["First WWII entry", "First Squash World Cup title", "Most Olympic medals", "Highest ranking team"], answer: 1 },
+  { q: "UPI transactions in 2025 were headed toward about:", options: ["100 million daily", "500 million daily", "1 billion daily", "2 billion daily"], answer: 2 },
+  { q: "Which AI initiative was launched in Maharashtra for cybercrime investigation?", options: ["CyberAI Shield", "MahaCrimeOS AI", "AI Guard", "CrimeSecure"], answer: 1 },
+  { q: "Which celebration is observed on 16 December marking a 1971 conflict victory?", options: ["Independence Day", "Republic Day", "Vijay Diwas", "Constitution Day"], answer: 2 },
+  { q: "Which Indian PM received Ethiopia’s highest civilian honor in 2025?", options: ["Narendra Modi", "Rahul Gandhi", "Amit Shah", "Arvind Kejriwal"], answer: 0 },
+  { q: "Rain & fog advisories in parts of India during December 2025 related to:", options: ["Cyclone season", "Dense fog and winter rain patterns", "Summer heat", "Earthquakes"], answer: 1 },
+  { q: "Which domestic microprocessor was unveiled in India in 2025?", options: ["INDRA32", "DHRUV64", "SAHAS128", "VARUNA16"], answer: 1 },
+  
+  /* 31‑40: Sports & Culture in 2025 */
+  { q: "The PDC World Darts Championship 2025/26 is being held in:", options: ["New York", "London", "Dubai", "Tokyo"], answer: 1 },
+  { q: "Which country won the Squash World Cup 2025 title?", options: ["Australia", "Egypt", "India", "Hong Kong"], answer: 2 },
+  { q: "Which day raises awareness for cheetah conservation in December 2025?", options: ["World Wildlife Day", "International Cheetah Day", "Earth Day", "Forest Day"], answer: 1 },
+  { q: "Which country hosted the first G20 on African soil in 2025?", options: ["Nigeria", "South Africa", "Kenya", "Egypt"], answer: 1 },
+  { q: "Cultural global praise was given to which traditional dance at a UNESCO event in Delhi?", options: ["Kathak", "Gedī", "Bhangra", "Garba"], answer: 1 },
+  { q: "Cyclone Ditwah in late 2025 affected:", options: ["South Pacific only", "Sri Lanka & Southern India", "North America", "Europe"], answer: 1 },
+  { q: "Which country’s leader set discussions on Taiwan that escalated China tensions?", options: ["South Korea", "Japan", "USA", "India"], answer: 1 },
+  { q: "Deepavali’s inclusion in UNESCO heritage strengthens:", options: ["Sports diplomacy", "Cultural soft power", "Military alliances", "Economic sanctions"], answer: 1 },
+  { q: "Global protest movements in 2025 included large marches in:", options: ["France", "Italy", "Both France & Italy", "Spain"], answer: 2 },
+  { q: "Protests in Europe in 2025 were over issues including:", options: ["Trade only", "Genocide concerns and budget cuts", "Only climate change", "Only housing"], answer: 1 },
+  
+  /* 41‑50: Economy & Development in 2025 */
+  { q: "Budget cuts in Sweden and Germany in 2025 redirected funds toward:", options: ["Healthcare", "Defence and Ukraine support", "Education", "Environmental projects"], answer: 1 },
+  { q: "Bangladesh experienced political unrest in December 2025 following:", options: ["An election", "The death of Osman Hadi", "Economic reforms", "Natural disaster"], answer: 1 },
+  { q: "Which organisation’s council India re‑joined with highest votes in 2025?", options: ["UN Security Council", "IMO Council", "World Bank Board", "IMF Board"], answer: 1 },
+  { q: "Microsoft’s 2025 multibillion investment aimed to strengthen:", options: ["Healthcare only", "AI infrastructure & data centres", "Automotive sector", "Space tech"], answer: 1 },
+  { q: "Sea Dragon 2025 naval exercise focused on:", options: ["Space exploration", "Anti‑submarine warfare", "Agricultural technology", "Economic policy"], answer: 1 },
+  { q: "The overarching 2025 world political landscape was shaped by:", options: ["Protests, peace deals and shifting alliances", "Only technology growth", "Only economic recession", "No major changes"], answer: 0 },
+  { q: "Which nation’s tribunal trial in 2025 sentenced a former PM to death (according to some reports)?", options: ["Nepal", "Bangladesh", "Sri Lanka", "Pakistan"], answer: 1 },
+  { q: "Global tensions in 2025 included rhetoric over:", options: ["Taiwan", "Climate accords", "Oil prices alone", "Sports diplomacy"], answer: 0 },
+  { q: "UPI transaction growth by late 2025 indicates:", options: ["Declining economy", "Rapid digital economy expansion", "Reduced digital payments", "Only stock market growth"], answer: 1 },
+  { q: "In 2025, AI governance debates occurred at summits of:", options: ["Only tech forums", "BRICS leaders meetings", "World Bank meetings", "Olympic committees"], answer: 1 }],
+gk:[
+  /* 1-10: Geography & Natural Wonders */
+  { q: "Which African lake is the deepest in the world?", options: ["Lake Victoria", "Lake Tanganyika", "Lake Malawi", "Lake Chad"], answer: 1 },
+  { q: "Which country has the most volcanoes?", options: ["Japan", "Indonesia", "Philippines", "USA"], answer: 1 },
+  { q: "Which is the largest island in the world?", options: ["Greenland", "Borneo", "Madagascar", "New Guinea"], answer: 0 },
+  { q: "Which mountain is called the 'Savage Mountain' due to its difficulty?", options: ["K2", "Everest", "Kangchenjunga", "Makalu"], answer: 0 },
+  { q: "The Okavango Delta is located in which country?", options: ["Botswana", "Namibia", "Zimbabwe", "Zambia"], answer: 0 },
+  { q: "Which is the longest river in Europe?", options: ["Danube", "Volga", "Rhine", "Dnieper"], answer: 1 },
+  { q: "Which desert is the driest in the world?", options: ["Sahara", "Atacama", "Gobi", "Kalahari"], answer: 1 },
+  { q: "Which waterfall is the highest in the world?", options: ["Niagara", "Victoria", "Angel Falls", "Iguazu Falls"], answer: 2 },
+  { q: "Which country has the most freshwater lakes?", options: ["Canada", "Finland", "USA", "Russia"], answer: 0 },
+  { q: "The River Rhine flows into which body of water?", options: ["North Sea", "Baltic Sea", "Mediterranean Sea", "Black Sea"], answer: 0 },
+  
+  /* 11-20: World History & Politics */
+  { q: "The Magna Carta was signed in which year?", options: ["1215", "1066", "1492", "1776"], answer: 0 },
+  { q: "Which country was the first to grant women the right to vote?", options: ["USA", "New Zealand", "UK", "France"], answer: 1 },
+  { q: "Who was the first Chancellor of Germany after World War II?", options: ["Konrad Adenauer", "Otto von Bismarck", "Helmut Kohl", "Angela Merkel"], answer: 0 },
+  { q: "Which empire was ruled by Suleiman the Magnificent?", options: ["Ottoman Empire", "Mughal Empire", "Roman Empire", "Persian Empire"], answer: 0 },
+  { q: "Which ancient civilization built Machu Picchu?", options: ["Aztec", "Maya", "Inca", "Olmec"], answer: 2 },
+  { q: "Which treaty ended the Thirty Years' War in 1648?", options: ["Treaty of Paris", "Treaty of Westphalia", "Treaty of Utrecht", "Treaty of Versailles"], answer: 1 },
+  { q: "Who was the last Pharaoh of Egypt?", options: ["Cleopatra VII", "Nefertiti", "Tutankhamun", "Ramses II"], answer: 0 },
+  { q: "The Berlin Blockade occurred in which year?", options: ["1945", "1948", "1950", "1955"], answer: 1 },
+  { q: "Which Asian country was never colonized by a European power?", options: ["Thailand", "Japan", "Nepal", "Bhutan"], answer: 0 },
+  { q: "Which city served as the capital of the Byzantine Empire?", options: ["Athens", "Constantinople", "Rome", "Istanbul"], answer: 1 },
+  
+  /* 21-30: World Economy & Resources */
+  { q: "Which country is the largest producer of coffee?", options: ["Vietnam", "Colombia", "Brazil", "Ethiopia"], answer: 2 },
+  { q: "Which country is the largest exporter of olive oil?", options: ["Italy", "Spain", "Greece", "Turkey"], answer: 1 },
+  { q: "Which metal is also called 'quick silver'?", options: ["Gold", "Mercury", "Lead", "Silver"], answer: 1 },
+  { q: "Which country produces the most natural rubber?", options: ["Malaysia", "Thailand", "Indonesia", "India"], answer: 1 },
+  { q: "Which country is the top producer of cocoa?", options: ["Ghana", "Ivory Coast", "Nigeria", "Brazil"], answer: 1 },
+  { q: "Which country has the largest proven oil reserves?", options: ["Saudi Arabia", "Russia", "USA", "Venezuela"], answer: 3 },
+  { q: "Which country is the largest producer of diamonds?", options: ["Botswana", "Russia", "South Africa", "Canada"], answer: 1 },
+  { q: "Which sea is known for the highest salt concentration?", options: ["Red Sea", "Dead Sea", "Caspian Sea", "Black Sea"], answer: 1 },
+  { q: "Which country has the largest uranium reserves?", options: ["Canada", "Australia", "Kazakhstan", "Russia"], answer: 1 },
+  { q: "Which country is the largest exporter of tea?", options: ["China", "India", "Sri Lanka", "Kenya"], answer: 1 },
+  
+  /* 31-40: Culture & Traditions */
+  { q: "The Day of the Dead festival is celebrated in which country?", options: ["Spain", "Mexico", "Portugal", "Italy"], answer: 1 },
+  { q: "Which country is famous for the Carnival festival?", options: ["Brazil", "Argentina", "Spain", "Italy"], answer: 0 },
+  { q: "Which country celebrates Songkran as its traditional New Year?", options: ["Thailand", "China", "Vietnam", "Japan"], answer: 0 },
+  { q: "Which country is known for its tea ceremony tradition called 'Chanoyu'?", options: ["China", "Japan", "Korea", "Vietnam"], answer: 1 },
+  { q: "Which country invented origami?", options: ["China", "Japan", "Korea", "Vietnam"], answer: 1 },
+  { q: "Which European city is famous for Oktoberfest?", options: ["Munich", "Berlin", "Vienna", "Zurich"], answer: 0 },
+  { q: "Which country is known for the Samba dance?", options: ["Argentina", "Brazil", "Colombia", "Mexico"], answer: 1 },
+  { q: "Which country celebrates Holi festival?", options: ["Nepal", "India", "Bangladesh", "All of the above"], answer: 3 },
+  { q: "Which country is famous for the Maasai tribe?", options: ["Kenya", "Tanzania", "Uganda", "Ethiopia"], answer: 0 },
+  { q: "Which country celebrates La Tomatina festival?", options: ["Spain", "Italy", "France", "Portugal"], answer: 0 },
+  
+  /* 41-50: Miscellaneous World Facts */
+  { q: "Which country is home to the Dead Sea?", options: ["Jordan and Israel", "Egypt and Jordan", "Israel and Egypt", "Saudi Arabia and Jordan"], answer: 0 },
+  { q: "Which city is known as the 'Eternal City'?", options: ["Athens", "Rome", "Cairo", "Jerusalem"], answer: 1 },
+  { q: "Which country uses the Yen as its currency?", options: ["China", "Japan", "South Korea", "Thailand"], answer: 1 },
+  { q: "Which is the largest coral reef in the world?", options: ["Great Barrier Reef", "Belize Barrier Reef", "Red Sea Coral Reef", "New Caledonia Barrier Reef"], answer: 0 },
+  { q: "Which country is nicknamed the 'Land of a Thousand Lakes'?", options: ["Sweden", "Finland", "Canada", "Norway"], answer: 1 },
+  { q: "Which is the largest bay in the world?", options: ["Bay of Bengal", "Hudson Bay", "San Francisco Bay", "Benguela Bay"], answer: 0 },
+  { q: "Which country has the largest number of UNESCO World Heritage Sites?", options: ["Italy", "China", "France", "Spain"], answer: 0 },
+  { q: "Which city is called the 'Pearl of the Danube'?", options: ["Vienna", "Budapest", "Belgrade", "Prague"], answer: 1 },
+  { q: "Which desert is located in northern China and southern Mongolia?", options: ["Gobi Desert", "Taklamakan", "Karakum", "Thar"], answer: 0 },
+  { q: "Which European country is famous for windmills and tulips?", options: ["Germany", "Netherlands", "Belgium", "Switzerland"], answer: 1 }]
+};
+
+let quiz=[],i=0,answers=[],timer;
+
+// COUNTDOWN
+function startCountdown(cat) {
+  const categoryNames = {
+    math: "Math",
+    english: "English",
+    world: "World Information",
+    islamic: "Islamic Studies",
+    pakistan: "Pakistan Affairs",
+    science: "Everyday Science",
+    current: "Current Affairs",
+    gk: "General Knowledge"
+  };
+  
+  let n = 3;
+  
+  // Remove previous countdown if exists
+  let oldCd = document.querySelector(".countdown");
+  if (oldCd) oldCd.remove();
+  
+  // Create full-screen countdown overlay
+  const cd = document.createElement("div");
+  cd.className = "countdown";
+  cd.style.position = "fixed";
+  cd.style.top = "0";
+  cd.style.left = "0";
+  cd.style.width = "100vw";
+  cd.style.height = "100vh";
+  cd.style.backgroundColor = "rgba(0,0,0,0.85)";
+  cd.style.display = "flex";
+  cd.style.alignItems = "center";
+  cd.style.justifyContent = "center";
+  cd.style.fontSize = "100px";
+  cd.style.fontWeight = "bold";
+  cd.style.color = "#fff";
+  cd.style.zIndex = "9999";
+  cd.style.textAlign = "center";
+  document.body.appendChild(cd);
+  
+  const iv = setInterval(() => {
+    cd.innerText = n === 0 ? "GO!" : n;
+    if (n === 0) {
+      clearInterval(iv);
+      setTimeout(() => {
+        cd.remove(); // remove overlay
+        startQuiz(cat); // ✅ start quiz here
+      }, 600); // small delay so user sees GO!
+    }
+    n--;
+  }, 1000);
+}
+// START QUIZ
+function startQuiz(cat) {
+  const categoryNames = {
+    math: "Math",
+    english: "English",
+    world: "World Information",
+    islamic: "Islamic Studies",
+    pakistan: "Pakistan Affairs",
+    science: "Everyday Science",
+    current: "Current Affairs",
+    gk: "General Knowledge"
+  };
+  
+  const displayName = categoryNames[cat] || cat; // fallback just in case
+  
+  quiz = [...banks[cat]];
+  i = 0;
+  answers = [];
+  
+  document.getElementById("menu").style.display = "none";
+  document.getElementById("quiz").style.display = "block";
+  document.getElementById("title").innerText = displayName; // use full name
+  loadQ();
+}
+
+let timerRAF = null;       // RAF handle for timer
+let questionLocked = false; // lock to prevent double nextQ
+
+// TIMER
+function startTimer(duration = 30) {
+    const fill = document.getElementById("timerFill");
+    let start = null;
+
+    // unlock the question at the start
+    questionLocked = false;
+
+    if(timerRAF) cancelAnimationFrame(timerRAF); // cancel any previous timer
+
+    const colors = [
+        "#2ecc71","#a1d76a","#c7e972","#f1e85a",
+        "#f7d85a","#f1c85a","#f39c12","#e67e22",
+        "#d35400","#e74c3c"
+    ];
+
+    function animate(timestamp) {
+        if (!start) start = timestamp;
+        let elapsed = (timestamp - start) / 1000;
+        let percent = Math.max(0, 1 - elapsed / duration);
+
+        fill.style.transform = `scaleX(${percent})`;
+
+        // color blending
+        let colorIndex = (1 - percent) * (colors.length - 1);
+        let lower = Math.floor(colorIndex);
+        let upper = Math.min(lower + 1, colors.length - 1);
+        let mix = colorIndex - lower;
+
+        function blend(a, b, t) {
+            let r = Math.round(parseInt(a.slice(1,3),16)*(1-t) + parseInt(b.slice(1,3),16)*t);
+            let g = Math.round(parseInt(a.slice(3,5),16)*(1-t) + parseInt(b.slice(3,5),16)*t);
+            let bcol = Math.round(parseInt(a.slice(5,7),16)*(1-t) + parseInt(b.slice(5,7),16)*t);
+            return `rgb(${r},${g},${bcol})`;
+        }
+
+        fill.style.backgroundColor = blend(colors[lower], colors[upper], mix);
+
+        if(percent > 0){
+            timerRAF = requestAnimationFrame(animate);
+        } else {
+            timerRAF = null;
+            if(!questionLocked){
+                questionLocked = true;
+                nextQ();
+            }
+        }
+    }
+
+    fill.style.transform = "scaleX(1)";
+    timerRAF = requestAnimationFrame(animate);
+}
+
+// LOAD QUESTION
+function loadQ() {
+  // Hide subject bar immediately when quiz starts
+  const subjectBar = document.getElementById("subjectBar");
+  if (subjectBar) {
+    subjectBar.style.display = "none";
+  }
+  
+  if (timerRAF) cancelAnimationFrame(timerRAF); // stop previous
+  startTimer();
+  
+  const fb = document.getElementById("feedback");
+  fb.className = "answer-feedback";
+  fb.innerText = "";
+  
+  document.getElementById("counter").innerText = `Question ${i+1}/${quiz.length}`;
+  document.getElementById("question").innerText = quiz[i].q;
+  
+  const o = document.getElementById("options");
+  o.innerHTML = "";
+  quiz[i].options.forEach((op, j) => {
+    const l = document.createElement("label");
+    l.innerText = op;
+    l.onclick = () => select(l, j);
+    o.appendChild(l);
+  });
+}
+
+// SELECT ANSWER
+function select(l,j){
+    if(questionLocked) return; // ignore clicks if locked
+    questionLocked = true; // lock
+    if(timerRAF){ cancelAnimationFrame(timerRAF); timerRAF = null; }
+
+    answers[i] = j;
+    const fb = document.getElementById("feedback");
+    fb.classList.add("show");
+    fb.innerText = j===quiz[i].answer ? "Correct" : "Wrong";
+    fb.classList.add(j===quiz[i].answer ? "correct-text" : "wrong-text");
+
+    l.style.animation = "labelPop 0.4s ease";
+    l.addEventListener("animationend", ()=>{ l.style.animation=""; });
+
+    document.querySelectorAll(".options label").forEach((x,k)=>{
+        if(k===quiz[i].answer) x.classList.add("correct");
+        if(k===j && k!==quiz[i].answer) x.classList.add("wrong");
+        x.style.pointerEvents = "none";
+    });
+
+    setTimeout(nextQ, 2500);
+}
+
+// NEXT QUESTION
+function nextQ(){ 
+    i++; 
+    if(i<quiz.length) loadQ(); 
+    else showResult(); 
+}
+
+// SHOW RESULT
+function showResult() {
+  let c = 0;
+  quiz.forEach((q, x) => { if (answers[x] === q.answer) c++ });
+  let p = Math.round((c / quiz.length) * 100);
+  
+  // Get the subject name from the quiz title
+  const subjectName = document.getElementById("title").innerText || "Subject";
+  
+  document.getElementById("quiz").innerHTML = `
+    <div class='result-box'>
+      <h3 style="text-align:center; margin-bottom:10px;">${subjectName}</h3>
+      <h2 style="text-align:center;">Test Completed 🎉</h2>
+      <div id='circleProgress' style='
+        width:150px;
+        height:150px;
+        border-radius:50%;
+        background:#eee;
+        position:relative;
+        margin:20px auto;
+        overflow:hidden;
+      '>
+        <div id='fill' style='
+          width:100%;
+          height:0%;
+          background:#ff0000;
+          position:absolute;
+          bottom:0;
+          left:0;
+          transition: height 0.05s linear, background 0.3s ease;
+        '></div>
+        <span id='percentText' style='
+          position:absolute;
+          top:50%;
+          left:50%;
+          transform:translate(-50%,-50%);
+          font-size:28px;
+          font-weight:bold;
+          color:#000;
+        '>0%</span>
+      </div>
+      <div class='stats'>
+        <div class='stat-card'>✅ Correct<br><b>${c}</b></div>
+        <div class='stat-card'>❌ Wrong<br><b>${quiz.length-c}</b></div>
+      </div>
+      <button class='restart-btn' onclick='location.reload()'>Back to Home</button>
+    </div>`;
+  
+  const fill = document.getElementById("fill");
+  const text = document.getElementById("percentText");
+  
+  const colors = ['#ff0000', '#ff3300', '#ff6600', '#ff9900', '#ffcc00', '#ffff00', '#ccff00', '#66ff33', '#33cc33', '#00ff00']; // 10 colors
+  const steps = 10; // 10 steps
+  let current = 0;
+  
+  function animateFill() {
+    if (current > p) return;
+    
+    // Calculate which color to show
+    let stepIndex = Math.floor((current / 100) * steps);
+    fill.style.background = colors[Math.min(stepIndex, colors.length - 1)];
+    
+    fill.style.height = current + "%";
+    text.innerText = current + "%";
+    current++;
+    requestAnimationFrame(animateFill);
+  }
+  
+  animateFill();
+}
+</script>
+</body>
+</html>
