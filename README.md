@@ -1,9 +1,3 @@
-## 🎓 5 To 15 Preparation Program
-
-<p align="center">
-  <img src="https://img.shields.io/github/stars/rehanalitalpur108-cmyk/5-To-15-Preparation-Program?style=for-the-badge" />
-  <img src="https://img.shields.io/github/forks/rehanalitalpur108-cmyk/5-To-15-Preparation-Program?style=for-the-badge" />
-  <img src="https://img.shields.io/github/issues/rehanalitalpur108-cmyk/5-To-15-Preparation-Program?style=for-the-badge" />
 # 🎓 5 To 15 Preparation Program
 
 <p align="center">
@@ -86,5 +80,3 @@ _No frameworks. No dependencies. Clean & beginner-friendly._
 ```bash
 git clone https://github.com/rehanalitalpur108-cmyk/5-To-15-Preparation-Program.git
 cd 5-To-15-Preparation-Program
-
----
